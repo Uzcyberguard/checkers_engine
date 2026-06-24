@@ -1,8 +1,7 @@
 class Move:
-    def __init__(self):
 
 
-    def create_form(self,board,path):
+    def create_form(self,board, path):
         return [board,path]
 
 
@@ -375,30 +374,28 @@ class Move:
 
         return possible_moves
 
-    def legal_moves(self,piece, board, path17):
+    def legal_moves(self,piece, board):
         caps = []
         moves = []
 
         for i in range(8):
             for j in range(8):
                 if piece == 1 and (board[i][j] == 1 or board[i][j] == 3):
-                    PATH = path17.copy()
-                    PATH.append((i, j))
-                    cap = self.find_captures(self.create_form(board, PATH))
-                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
+
+                    cap = self.find_captures(self.create_form(board, [(i,j)]))
+                    if len(cap) > 1 or len(cap[0][1]) > 1:
                         caps.extend(cap)
                     else:
-                        moves.extend(self.find_moves(self.create_form(board,PATH)))
+                        moves.extend(self.find_moves(self.create_form(board,[(i,j)])))
 
 
                 if piece == -1 and (board[i][j] == -1 or board[i][j] == -3):
-                    PATH = path17.copy()
-                    PATH.append((i, j))
-                    cap = self.find_captures(self.create_form(board, PATH))
-                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
+
+                    cap = self.find_captures(self.create_form(board, [(i,j)]))
+                    if len(cap) > 1 or len(cap[0][1]) > 1:
                         caps.extend(cap)
                     else:
-                        moves.extend(self.find_moves(self.create_form(board, PATH)))
+                        moves.extend(self.find_moves(self.create_form(board, [(i,j)])))
         if caps:
             return caps
         else:
