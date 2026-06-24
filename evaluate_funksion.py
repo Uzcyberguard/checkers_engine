@@ -1,7 +1,7 @@
 from move_funksion import Move
 m = Move()
 
-class Evaluate():
+class Evaluate:
 
 
 
@@ -12,15 +12,41 @@ class Evaluate():
             for j in range(8):
                 if board[i][j] == 1:
                       if i<=5 and 1 <= j <= 6:
-                          point += 15+i
+                          point += 15+(7-i)
 
-                if board[i][j] == -1:
+                elif board[i][j] == -1:
                       if i>=3 and 1 <= j <= 6:
-                          point-=(22+i)
+                          point-=(15+i)
+                elif board[i][j] == 3 or board[i][j] ==-3 :
+                    r = i ; c = j
+                    a = board[i][j]
+                    d1 = True
+                    d2 = True
+                    d3 = True
+                    d4 = True
+                    for h in [1, 2, 3, 4, 5, 6, 7]:
+                        if r + h <= 7 and c + h <= 7 and d1:
+                            if board[r + h][c + h] == 0:
+                                point += a*10
+                            else:
+                                d1 = False
 
+                        if r + h <= 7 and c - h >= 0 and d2:
+                            if board[r + h][c - h] == 0:
+                                point += a * 10
+                            else:
+                                d2 = False
+                        if r - h >= 0 and c - h >= 0 and d3:
+                            if board[r - h][c - h] == 0:
+                                point += a * 10
+                            else:
+                                d3 = False
+                        if r - h >= 0 and c + h <= 7 and d4:
+                            if board[r - h][c + h] == 0:
+                                point += a * 10
+                            else:
+                                d4 = False
         return point
-    def king_dominance(self,board):
-        pass
 
 
 
@@ -28,11 +54,8 @@ class Evaluate():
         score = 0
         for row in board:
             score+=sum(row)*100
-
-        score+=len(m.legal_moves(1,board))*5
-        score-=len(m.legal_moves(-1,board))*5
         score+=self.centralization(board)
-        return score
+        return score/100
 
 
 
