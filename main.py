@@ -1,5 +1,6 @@
 """ Created on Mon Jun  8 15:54:51 2026 Hasan Normamatov """
-
+from move_funksion import Move
+from evaluate_funksion import Evaluate
 import time
 t = time.time()
 PIECE = 1
@@ -12,6 +13,7 @@ BOARD = [
     [ 1, 0, 1, 0, 1, 0, 1, 0], # 5
     [ 0, 1, 0, 1, 0, 1, 0, 1], # 6
     [ 1, 0, 1, 0, 1, 0, 1, 0]  # 7
+  #   0  1  2  3  4  5  6  7
 ]
 FIRST_MOVES = []
 SECOND_MOVES = []
@@ -19,406 +21,9 @@ THIRD_MOVES = []
 FOURTH_MOVES = []
 FIFTH_MOVES = []
 
+move = Move()
+evaluate = Evaluate()
 
-def is_there_capture(position):
-    board = position[0]
-    r = position[1][-1][0]
-    c = position[1][-1][1]
-    a = board[r][c]
-
-    v1 = True
-    v2 = True
-    v3 = True
-    v4 = True
-
-    for q in [1, 2, 3, 4, 5, 6, 7]:
-
-        # ===========================================================================================================
-
-        if r - q >= 0 and c - q >= 0 and v1:
-            if board[r - q][c - q] == -a or board[r - q][c - q] == int(-a / 3):
-
-                k = q + 1
-
-                while True:
-                    if r - k < 0 or c - k < 0:
-                        break
-                    elif board[r - k][c - k] == 0:
-
-                        return True
-                    else:
-                        v1 = False
-                        break
-
-                    k = k + 1
-            elif board[r - q][c - q] == a or board[r - q][c - q] == int(a / 3):
-                v1 = False
-        # ============================================================ ========================================
-        if r + q <= 7 and c + q <= 7 and v2:
-            if board[r + q][c + q] == -a or board[r + q][c + q] == int(-a / 3):
-                k = q + 1
-                while True:
-                    if r + k > 7 or c + k > 7:
-                        break
-                    elif board[r + k][c + k] == 0:
-                        return True
-                    else:
-                        v2 = False
-                        break
-
-                    k = k + 1
-            elif board[r + q][c + q] == a or board[r + q][c + q] == int(a / 3):
-                v2 = False
-                # ============================================================================================
-        if r - q >= 0 and c + q < 7 and v3:
-            if board[r - q][c + q] == -a or board[r - q][c + q] == int(-a / 3):
-
-                k = q + 1
-
-                while True:
-                    if 0 > r - k or c + k > 7:
-                        break
-                    if board[r - k][c + k] == 0:
-
-                        return True
-                    else:
-                        v3 = False
-                        break
-                    k += 1
-            elif board[r - q][c + q] == a or board[r - q][c + q] == int(a / 3):
-                v3 = False
-                # ============================================================================================
-        if r + q < 7 and c - q >= 0 and v4:
-            if board[r + q][c - q] == -a or board[r + q][c - q] == int(-a / 3):
-
-                k = q + 1
-
-                while True:
-                    if r + k > 7 or c - k < 0:
-                        break
-                    if board[r + k][c - k] == 0:
-
-                        return True
-                    else:
-                        v4 = False
-                        break
-                    k += 1
-            elif board[r + q][c - q] == a or board[r + q][c - q] == int(a / 3):
-                v4 = False
-    return False
-
-
-def find_captures(p_capture):
-    captures = [p_capture.copy()]
-
-    trash_list = []
-
-    i = 0
-
-    while i < len(captures):
-        king_caps = []
-        have_capture = False
-        board = captures[i][0]
-        r = captures[i][1][-1][0]
-        c = captures[i][1][-1][1]
-        a = board[r][c]
-        # =================================================================================================
-        if a == 1 or a == -1:  # oddiy donalar uchun
-
-            for q in [-1, 1]:
-
-                if (r - 2 * q >= 0 and c - 2 * q >= 0) and (r - 2 * q <= 7 and c - 2 * q <= 7):
-                    if board[r - q][c - q] == -a and board[r - 2 * q][c - 2 * q] == 0:
-                        new_board = [row[:] for row in board]
-                        new_board[r][c] = 0
-                        new_board[r - q][c - q] = 0
-                        new_board[r - 2 * q][c - 2 * q] = a
-                        path = (captures[i][1]).copy()
-                        path.append((r - 2 * q, c - 2 * q))
-                        if r - 2 * q == 0 and a == 1:
-                            new_board[r - 2 * q][c - 2 * q] = 3
-                        elif r - 2 * q == 7 and a == -1:
-                            new_board[r - 2 * q][c - 2 * q] = -3
-
-                        captures.append([new_board, path])
-                        have_capture = True
-
-            for p in [-1, 1]:
-
-                if (r - 2 * p >= 0 and c + 2 * p >= 0) and (r - 2 * p <= 7 and c + 2 * p <= 7):
-                    if board[r - p][c + p] == -a and board[r - 2 * p][c + 2 * p] == 0:
-                        new_board = [row[:] for row in board]
-                        new_board[r][c] = 0
-                        new_board[r - p][c + p] = 0
-                        new_board[r - 2 * p][c + 2 * p] = a
-                        path = (captures[i][1]).copy()
-                        path.append((r - 2 * p, c + 2 * p))
-                        if r - 2 * p == 0 and a == 1:
-                            new_board[r - 2 * p][c + 2 * p] = 3
-                        elif r - 2 * p == 7 and a == -1:
-                            new_board[r - 2 * p][c + 2 * p] = -3
-                        captures.append([new_board, path])
-                        have_capture = True
-        # ====================================================================================================================
-        # ====================================================================================================================
-        #  DAMKAAAAAAAAAAAAAAAAAA
-
-        if a == 3 or a == -3:
-            v1 = True
-            v2 = True
-            v3 = True
-            v4 = True
-
-            for q in [1, 2, 3, 4, 5, 6, 7]:
-
-                # ===========================================================================================================
-
-                if r - q >= 0 and c - q >= 0 and v1:
-                    if board[r - q][c - q] == -a or board[r - q][c - q] == int(-a / 3):
-
-                        k = q + 1
-
-                        while True:
-                            if r - k < 0 or c - k < 0:
-                                break
-                            elif board[r - k][c - k] == 0:
-                                new_board = [row[:] for row in board]
-                                new_board[r][c] = 0
-                                new_board[r - q][c - q] = 0
-                                new_board[r - k][c - k] = a
-                                path = (captures[i][1]).copy()
-                                path.append((r - k, c - k))
-                                king_caps.append([new_board, path])
-                                have_capture = True
-                            else:
-                                v1 = False
-                                break
-
-                            k = k + 1
-                    elif board[r - q][c - q] == a or board[r - q][c - q] == int(a / 3):
-                        v1 = False
-                # ============================================================ ========================================
-                if r + q <= 7 and c + q <= 7 and v2:
-                    if board[r + q][c + q] == -a or board[r + q][c + q] == int(-a / 3):
-                        k = q + 1
-                        while True:
-                            if r + k > 7 or c + k > 7:
-                                break
-                            elif board[r + k][c + k] == 0:
-                                new_board = [row[:] for row in board]
-                                new_board[r][c] = 0
-                                new_board[r + q][c + q] = 0
-                                new_board[r + k][c + k] = a
-                                path = (captures[i][1]).copy()
-                                path.append((r + k, c + k))
-                                king_caps.append([new_board, path])
-                                have_capture = True
-                            else:
-                                v2 = False
-                                break
-
-                            k = k + 1
-                    elif board[r + q][c + q] == a or board[r + q][c + q] == int(a / 3):
-                        v2 = False
-                        # ============================================================================================
-                if r - q >= 0 and c + q < 7 and v3:
-                    if board[r - q][c + q] == -a or board[r - q][c + q] == int(-a / 3):
-
-                        k = q + 1
-
-                        while True:
-                            if 0 > r - k or c + k > 7:
-                                break
-                            if board[r - k][c + k] == 0:
-                                new_board = [row[:] for row in board]
-                                new_board[r][c] = 0
-                                new_board[r - q][c + q] = 0
-                                new_board[r - k][c + k] = a
-                                path = (captures[i][1]).copy()
-                                path.append((r - k, c + k))
-                                king_caps.append([new_board, path])
-                                have_capture = True
-                            else:
-                                v3 = False
-                                break
-                            k += 1
-                    elif board[r - q][c + q] == a or board[r - q][c + q] == int(a / 3):
-                        v3 = False
-                        # ============================================================================================
-                if r + q < 7 and c - q >= 0 and v4:
-                    if board[r + q][c - q] == -a or board[r + q][c - q] == int(-a / 3):
-
-                        k = q + 1
-
-                        while True:
-                            if r + k > 7 or c - k < 0:
-                                break
-                            if board[r + k][c - k] == 0:
-                                new_board = [row[:] for row in board]
-                                new_board[r][c] = 0
-                                new_board[r + q][c - q] = 0
-                                new_board[r + k][c - k] = a
-                                path = (captures[i][1]).copy()
-                                path.append((r + k, c - k))
-                                king_caps.append([new_board, path])
-                                have_capture = True
-                            else:
-                                v4 = False
-                                break
-                            k += 1
-                    elif board[r + q][c - q] == a or board[r + q][c - q] == int(a / 3):
-                        v4 = False
-        b = 0
-        for pos in king_caps:
-            if is_there_capture(pos):
-                captures.append(pos)
-                b += 1
-
-        if b == 0:
-            captures.extend(king_caps)
-
-        # ===========================================================================================================================
-        if have_capture:
-            trash_list.append(captures[i])
-        i += 1
-
-    return [x for x in captures if x not in trash_list]
-
-
-def find_moves(start_poss):
-    board = start_poss[0]
-    r = start_poss[1][-1][0]
-    c = start_poss[1][-1][1]
-    path = start_poss[1]
-    possible_moves = []
-    f = board[r][c]
-    # =======================================================================
-    if f == 1:
-        if r - 1 >= 0 and c - 1 >= 0:
-            if board[r - 1][c - 1] == 0:
-                new_board = [row[:] for row in board]
-                new_board[r][c] = 0
-                new_board[r - 1][c - 1] = 1
-                path1 = path.copy()
-                path1.append((r - 1, c - 1))
-                if r - 1 == 0:
-                    new_board[r - 1][c - 1] = 3
-                possible_moves.append([new_board, path1])
-
-        if r - 1 >= 0 and c + 1 <= 7:
-            if board[r - 1][c + 1] == 0:
-                new_board = [row[:] for row in board]
-                new_board[r][c] = 0
-                new_board[r - 1][c + 1] = 1
-                path1 = path.copy()
-                path1.append((r - 1, c + 1))
-                if r - 1 == 0:
-                    new_board[r - 1][c + 1] = 3
-                possible_moves.append([new_board, path1])
-    elif f == -1:
-        if r + 1 <= 7 and c - 1 >= 0:
-            if board[r + 1][c - 1] == 0:
-                new_board = [row[:] for row in board]
-                new_board[r][c] = 0
-                new_board[r + 1][c - 1] = -1
-                path1 = path.copy()
-                path1.append((r + 1, c - 1))
-                if r + 1 == 7:
-                    new_board[r + 1][c - 1] = -3
-
-                possible_moves.append([new_board, path1])
-
-        if r + 1 <= 7 and c + 1 <= 7:
-            if board[r + 1][c + 1] == 0:
-                new_board = [row[:] for row in board]
-                new_board[r][c] = 0
-                new_board[r + 1][c + 1] = -1
-                path1 = path.copy()
-                path1.append((r + 1, c + 1))
-                if r + 1 == 7:
-                    new_board[r + 1][c + 1] = -3
-                possible_moves.append([new_board, path1])
-
-    elif f == 3 or f == -3:
-        d1 = True
-        d2 = True
-        d3 = True
-        d4 = True
-        for h in [1, 2, 3, 4, 5, 6, 7]:
-            if r + h <= 7 and c + h <= 7 and d1:
-                if board[r + h][c + h] == 0:
-                    new_board = [row[:] for row in board]
-                    new_board[r][c] = 0
-                    new_board[r + h][c + h] = f
-                    path1 = path.copy()
-                    path1.append((r + h, c + h))
-                    possible_moves.append([new_board, path1])
-                else:
-                    d1 = False
-
-            if r + h <= 7 and c - h >= 0 and d2:
-                if board[r + h][c - h] == 0:
-                    new_board = [row[:] for row in board]
-                    new_board[r][c] = 0
-                    new_board[r + h][c - h] = f
-                    path1 = path.copy()
-                    path1.append((r + h, c - h))
-                    possible_moves.append([new_board, path1])
-                else:
-                    d2 = False
-            if r - h >= 0 and c - h >= 0 and d3:
-                if board[r - h][c - h] == 0:
-                    new_board = [row[:] for row in board]
-                    new_board[r][c] = 0
-                    new_board[r - h][c - h] = f
-                    path1 = path.copy()
-                    path1.append((r - h, c - h))
-                    possible_moves.append([new_board, path1])
-                else:
-                    d3 = False
-            if r - h >= 0 and c + h <= 7 and d4:
-                if board[r - h][c + h] == 0:
-                    new_board = [row[:] for row in board]
-                    new_board[r][c] = 0
-                    new_board[r - h][c + h] = f
-                    path1 = path.copy()
-                    path1.append((r - h, c + h))
-                    possible_moves.append([new_board, path1])
-                else:
-                    d4 = False
-
-    return possible_moves
-
-
-def legal_moves(piece, board, path17):
-    caps = []
-    moves = []
-    if piece == 1:
-        for i in range(8):
-            for j in range(8):
-                if board[i][j] == 1 or board[i][j] == 3:
-                    PATH = path17.copy()
-                    PATH.append((i, j))
-                    cap = find_captures([board, PATH])
-                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
-                        caps.extend(cap)
-                    else:
-                        moves.extend(find_moves([board, PATH]))
-    elif piece == -1:
-        for i in range(8):
-            for j in range(8):
-                if board[i][j] == -1 or board[i][j] == -3:
-                    PATH = path17.copy()
-                    PATH.append((i, j))
-                    cap = find_captures([board, PATH])
-                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
-                        caps.extend(cap)
-                    else:
-                        moves.extend(find_moves([board, PATH]))
-    if caps:
-        return caps
-    else:
-        return moves
 
 
 def evaluate(board):
@@ -428,21 +33,21 @@ def evaluate(board):
     # FOURTH_MOVES=[]
     # FIFTH_MOVES=[]
 
-    starting = legal_moves(1, board, [])
+    starting = move.legal_moves(1, board, [])
 
     for depth in starting:
-        FIRST_MOVES.extend(legal_moves(-1, depth[0], depth[1]))
+        FIRST_MOVES.extend(move.legal_moves(-1, depth[0], depth[1]))
 
     for depth2 in FIRST_MOVES:
-        for depth3 in legal_moves(1, depth2[0], depth2[1]):
-            SECOND_MOVES.extend(legal_moves(-1, depth3[0], depth3[1]))
+        for depth3 in move.legal_moves(1, depth2[0], depth2[1]):
+            SECOND_MOVES.extend(move.legal_moves(-1, depth3[0], depth3[1]))
 
     for depth4 in SECOND_MOVES:
-        for depth5 in legal_moves(1, depth4[0], depth4[1]):
-            THIRD_MOVES.extend(legal_moves(-1, depth5[0], depth5[1]))
+        for depth5 in move.legal_moves(1, depth4[0], depth4[1]):
+            THIRD_MOVES.extend(move.legal_moves(-1, depth5[0], depth5[1]))
     for depth6 in THIRD_MOVES:
-        for depth7 in legal_moves(1, depth6[0], depth6[1]):
-            FOURTH_MOVES.extend(legal_moves(-1, depth7[0], depth7[1]))
+        for depth7 in move.legal_moves(1, depth6[0], depth6[1]):
+            FOURTH_MOVES.extend(move.legal_moves(-1, depth7[0], depth7[1]))
     # for depth8 in FOURTH_MOVES:
     #     for depth8 in legal_moves(1, depth8[0]):
     #         FIFTH_MOVES.extend(legal_moves(-1, depth8[0]))

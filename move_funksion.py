@@ -1,8 +1,13 @@
-class Move():
+class Move:
     def __init__(self):
-        pass
 
-    def is_there_capture(self,position):
+
+    def create_form(self,board,path):
+        return [board,path]
+
+
+    def is_there_captures(self,position):
+
         board = position[0]
         r = position[1][-1][0]
         c = position[1][-1][1]
@@ -90,7 +95,6 @@ class Move():
         return False
 
 
-
     def find_captures(self,p_capture):
         captures = [p_capture.copy()]
 
@@ -106,7 +110,7 @@ class Move():
             c = captures[i][1][-1][1]
             a = board[r][c]
             # =================================================================================================
-            if a == 1 or a == -1:  # oddiy donalar uchun
+            if a == 1 or a == -1:
 
                 for q in [-1, 1]:
 
@@ -123,7 +127,7 @@ class Move():
                             elif r - 2 * q == 7 and a == -1:
                                 new_board[r - 2 * q][c - 2 * q] = -3
 
-                            captures.append([new_board, path])
+                            captures.append(self.create_form(new_board, path))
                             have_capture = True
 
                 for p in [-1, 1]:
@@ -140,11 +144,11 @@ class Move():
                                 new_board[r - 2 * p][c + 2 * p] = 3
                             elif r - 2 * p == 7 and a == -1:
                                 new_board[r - 2 * p][c + 2 * p] = -3
-                            captures.append([new_board, path])
+                            captures.append(self.create_form(new_board, path))
                             have_capture = True
             # ====================================================================================================================
             # ====================================================================================================================
-            #  DAMKAAAAAAAAAAAAAAAAAA
+
 
             if a == 3 or a == -3:
                 v1 = True
@@ -171,7 +175,7 @@ class Move():
                                     new_board[r - k][c - k] = a
                                     path = (captures[i][1]).copy()
                                     path.append((r - k, c - k))
-                                    king_caps.append([new_board, path])
+                                    king_caps.append(self.create_form(new_board, path))
                                     have_capture = True
                                 else:
                                     v1 = False
@@ -194,7 +198,7 @@ class Move():
                                     new_board[r + k][c + k] = a
                                     path = (captures[i][1]).copy()
                                     path.append((r + k, c + k))
-                                    king_caps.append([new_board, path])
+                                    king_caps.append(self.create_form(new_board, path))
                                     have_capture = True
                                 else:
                                     v2 = False
@@ -219,7 +223,7 @@ class Move():
                                     new_board[r - k][c + k] = a
                                     path = (captures[i][1]).copy()
                                     path.append((r - k, c + k))
-                                    king_caps.append([new_board, path])
+                                    king_caps.append(self.create_form(new_board, path))
                                     have_capture = True
                                 else:
                                     v3 = False
@@ -243,7 +247,7 @@ class Move():
                                     new_board[r + k][c - k] = a
                                     path = (captures[i][1]).copy()
                                     path.append((r + k, c - k))
-                                    king_caps.append([new_board, path])
+                                    king_caps.append(self.create_form(new_board, path))
                                     have_capture = True
                                 else:
                                     v4 = False
@@ -253,7 +257,7 @@ class Move():
                             v4 = False
             b = 0
             for pos in king_caps:
-                if self.is_there_capture(pos):
+                if self.is_there_captures(pos):
                     captures.append(pos)
                     b += 1
 
@@ -266,3 +270,136 @@ class Move():
             i += 1
 
         return [x for x in captures if x not in trash_list]
+
+    def find_moves(self,start_poss):
+        board = start_poss[0]
+        r = start_poss[1][-1][0]
+        c = start_poss[1][-1][1]
+        path = start_poss[1]
+        possible_moves = []
+        f = board[r][c]
+        # =======================================================================
+        if f == 1:
+            if r - 1 >= 0 and c - 1 >= 0:
+                if board[r - 1][c - 1] == 0:
+                    new_board = [row[:] for row in board]
+                    new_board[r][c] = 0
+                    new_board[r - 1][c - 1] = 1
+                    path1 = path.copy()
+                    path1.append((r - 1, c - 1))
+                    if r - 1 == 0:
+                        new_board[r - 1][c - 1] = 3
+                    possible_moves.append(self.create_form(new_board, path1))
+
+            if r - 1 >= 0 and c + 1 <= 7:
+                if board[r - 1][c + 1] == 0:
+                    new_board = [row[:] for row in board]
+                    new_board[r][c] = 0
+                    new_board[r - 1][c + 1] = 1
+                    path1 = path.copy()
+                    path1.append((r - 1, c + 1))
+                    if r - 1 == 0:
+                        new_board[r - 1][c + 1] = 3
+                    possible_moves.append(self.create_form(new_board, path1))
+        elif f == -1:
+            if r + 1 <= 7 and c - 1 >= 0:
+                if board[r + 1][c - 1] == 0:
+                    new_board = [row[:] for row in board]
+                    new_board[r][c] = 0
+                    new_board[r + 1][c - 1] = -1
+                    path1 = path.copy()
+                    path1.append((r + 1, c - 1))
+                    if r + 1 == 7:
+                        new_board[r + 1][c - 1] = -3
+
+                    possible_moves.append(self.create_form(new_board, path1))
+
+            if r + 1 <= 7 and c + 1 <= 7:
+                if board[r + 1][c + 1] == 0:
+                    new_board = [row[:] for row in board]
+                    new_board[r][c] = 0
+                    new_board[r + 1][c + 1] = -1
+                    path1 = path.copy()
+                    path1.append((r + 1, c + 1))
+                    if r + 1 == 7:
+                        new_board[r + 1][c + 1] = -3
+                    possible_moves.append(self.create_form(new_board, path1))
+
+        elif f == 3 or f == -3:
+            d1 = True
+            d2 = True
+            d3 = True
+            d4 = True
+            for h in [1, 2, 3, 4, 5, 6, 7]:
+                if r + h <= 7 and c + h <= 7 and d1:
+                    if board[r + h][c + h] == 0:
+                        new_board = [row[:] for row in board]
+                        new_board[r][c] = 0
+                        new_board[r + h][c + h] = f
+                        path1 = path.copy()
+                        path1.append((r + h, c + h))
+                        possible_moves.append(self.create_form(new_board, path1))
+                    else:
+                        d1 = False
+
+                if r + h <= 7 and c - h >= 0 and d2:
+                    if board[r + h][c - h] == 0:
+                        new_board = [row[:] for row in board]
+                        new_board[r][c] = 0
+                        new_board[r + h][c - h] = f
+                        path1 = path.copy()
+                        path1.append((r + h, c - h))
+                        possible_moves.append(self.create_form(new_board, path1))
+                    else:
+                        d2 = False
+                if r - h >= 0 and c - h >= 0 and d3:
+                    if board[r - h][c - h] == 0:
+                        new_board = [row[:] for row in board]
+                        new_board[r][c] = 0
+                        new_board[r - h][c - h] = f
+                        path1 = path.copy()
+                        path1.append((r - h, c - h))
+                        possible_moves.append(self.create_form(new_board, path1))
+                    else:
+                        d3 = False
+                if r - h >= 0 and c + h <= 7 and d4:
+                    if board[r - h][c + h] == 0:
+                        new_board = [row[:] for row in board]
+                        new_board[r][c] = 0
+                        new_board[r - h][c + h] = f
+                        path1 = path.copy()
+                        path1.append((r - h, c + h))
+                        possible_moves.append(self.create_form(new_board, path1))
+                    else:
+                        d4 = False
+
+        return possible_moves
+
+    def legal_moves(self,piece, board, path17):
+        caps = []
+        moves = []
+
+        for i in range(8):
+            for j in range(8):
+                if piece == 1 and (board[i][j] == 1 or board[i][j] == 3):
+                    PATH = path17.copy()
+                    PATH.append((i, j))
+                    cap = self.find_captures(self.create_form(board, PATH))
+                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
+                        caps.extend(cap)
+                    else:
+                        moves.extend(self.find_moves(self.create_form(board,PATH)))
+
+
+                if piece == -1 and (board[i][j] == -1 or board[i][j] == -3):
+                    PATH = path17.copy()
+                    PATH.append((i, j))
+                    cap = self.find_captures(self.create_form(board, PATH))
+                    if len(cap) > 1 or len(cap[0][1]) > len(PATH):
+                        caps.extend(cap)
+                    else:
+                        moves.extend(self.find_moves(self.create_form(board, PATH)))
+        if caps:
+            return caps
+        else:
+            return moves
