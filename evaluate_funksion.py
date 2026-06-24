@@ -27,23 +27,23 @@ class Evaluate:
                     for h in [1, 2, 3, 4, 5, 6, 7]:
                         if r + h <= 7 and c + h <= 7 and d1:
                             if board[r + h][c + h] == 0:
-                                point += a*10
+                                point += a*3
                             else:
                                 d1 = False
 
                         if r + h <= 7 and c - h >= 0 and d2:
                             if board[r + h][c - h] == 0:
-                                point += a * 10
+                                point += a * 3
                             else:
                                 d2 = False
                         if r - h >= 0 and c - h >= 0 and d3:
                             if board[r - h][c - h] == 0:
-                                point += a * 10
+                                point += a * 3
                             else:
                                 d3 = False
                         if r - h >= 0 and c + h <= 7 and d4:
                             if board[r - h][c + h] == 0:
-                                point += a * 10
+                                point += a * 3
                             else:
                                 d4 = False
         return point
