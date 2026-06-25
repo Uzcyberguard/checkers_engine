@@ -27,35 +27,35 @@ class Evaluate:
                     for h in [1, 2, 3, 4, 5, 6, 7]:
                         if r + h <= 7 and c + h <= 7 and d1:
                             if board[r + h][c + h] == 0:
-                                point += a*3
+                                point += a
                             else:
                                 d1 = False
 
                         if r + h <= 7 and c - h >= 0 and d2:
                             if board[r + h][c - h] == 0:
-                                point += a * 3
+                                point += a
                             else:
                                 d2 = False
                         if r - h >= 0 and c - h >= 0 and d3:
                             if board[r - h][c - h] == 0:
-                                point += a * 3
+                                point += a
                             else:
                                 d3 = False
                         if r - h >= 0 and c + h <= 7 and d4:
                             if board[r - h][c + h] == 0:
-                                point += a * 3
+                                point += a
                             else:
                                 d4 = False
-        return point
+        return point/100
 
 
 
     def evaluate(self, board):
         score = 0
         for row in board:
-            score+=sum(row)*100
+            score+=sum(row)
         score+=self.centralization(board)
-        return score/100
+        return score
 
 
 

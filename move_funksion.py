@@ -56,7 +56,7 @@ class Move:
                 elif board[r + q][c + q] == a or board[r + q][c + q] == int(a / 3):
                     v2 = False
                     # ============================================================================================
-            if r - q >= 0 and c + q < 7 and v3:
+            if r - q >= 0 and c + q <= 7 and v3:
                 if board[r - q][c + q] == -a or board[r - q][c + q] == int(-a / 3):
 
                     k = q + 1
@@ -74,7 +74,7 @@ class Move:
                 elif board[r - q][c + q] == a or board[r - q][c + q] == int(a / 3):
                     v3 = False
                     # ============================================================================================
-            if r + q < 7 and c - q >= 0 and v4:
+            if r + q <= 7 and c - q >= 0 and v4:
                 if board[r + q][c - q] == -a or board[r + q][c - q] == int(-a / 3):
 
                     k = q + 1
@@ -114,7 +114,7 @@ class Move:
                 for q in [-1, 1]:
 
                     if (r - 2 * q >= 0 and c - 2 * q >= 0) and (r - 2 * q <= 7 and c - 2 * q <= 7):
-                        if board[r - q][c - q] == -a and board[r - 2 * q][c - 2 * q] == 0:
+                        if board[r - q][c - q] in (-a,-3*a) and board[r - 2 * q][c - 2 * q] == 0:
                             new_board = [row[:] for row in board]
                             new_board[r][c] = 0
                             new_board[r - q][c - q] = 0
@@ -132,7 +132,7 @@ class Move:
                 for p in [-1, 1]:
 
                     if (r - 2 * p >= 0 and c + 2 * p >= 0) and (r - 2 * p <= 7 and c + 2 * p <= 7):
-                        if board[r - p][c + p] == -a and board[r - 2 * p][c + 2 * p] == 0:
+                        if board[r - p][c + p] in (-a,-3*a) and board[r - 2 * p][c + 2 * p] == 0:
                             new_board = [row[:] for row in board]
                             new_board[r][c] = 0
                             new_board[r - p][c + p] = 0
@@ -207,7 +207,7 @@ class Move:
                         elif board[r + q][c + q] == a or board[r + q][c + q] == int(a / 3):
                             v2 = False
                             # ============================================================================================
-                    if r - q >= 0 and c + q < 7 and v3:
+                    if r - q >= 0 and c + q <= 7 and v3:
                         if board[r - q][c + q] == -a or board[r - q][c + q] == int(-a / 3):
 
                             k = q + 1
@@ -231,7 +231,7 @@ class Move:
                         elif board[r - q][c + q] == a or board[r - q][c + q] == int(a / 3):
                             v3 = False
                             # ============================================================================================
-                    if r + q < 7 and c - q >= 0 and v4:
+                    if r + q <= 7 and c - q >= 0 and v4:
                         if board[r + q][c - q] == -a or board[r + q][c - q] == int(-a / 3):
 
                             k = q + 1
