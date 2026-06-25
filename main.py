@@ -2,19 +2,19 @@
 from move_funksion import Move
 from evaluate_funksion import Evaluate
 from minimax_funktion import Minimax
-m = Move()
+
 
 import time
 t = time.time()
-DEPTH = 8
+DEPTH = 10
 BOARD = [
     [ 0, 0, 0, 0, 0, 0, 0, 0], # 0
-    [ 0, 0, 0, 0, 0, 0,-1, 0], # 1
-    [ 0, 0, 0, 0, 0, 0, 0,-1], # 2
-    [ 0, 0, 0, 0, 0, 0, 3, 0], # 3
-    [ 0, 0, 0, 0, 0, 0, 0,-1], # 4
-    [-1, 0, 0, 0, 1, 0, 0, 0], # 5
-    [ 0, 0, 0, 0, 0, 0, 0, 0], # 6
+    [ 1, 0, 0, 0, 0, 0, 1, 0], # 1
+    [ 0, 0, 0, 0, 0, 0, 0, 0], # 2
+    [ 0, 0, 0, 0, 0, 0, 0, 0], # 3
+    [ 0, 0, 0, 0, 0, 0, 0, 0], # 4
+    [ 0, 0, 0, 0, 0, 0, 0, 0], # 5
+    [ 0, 0, 0, 0, 0, 0, 0, 1], # 6
     [ 0, 0, 0, 0, 0, 0, 0, 0]  # 7
   #   0  1  2  3  4  5  6  7
 ]
@@ -51,11 +51,11 @@ def best_move(board, player, depth):
     print()
     return best_path
 
-moves = m.legal_moves(1, BOARD)
+
 
 
 
 print(best_move(BOARD,1,DEPTH))
-print(t - time.time())
+print(time.time()-t)
 
 
