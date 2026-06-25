@@ -48,7 +48,7 @@ def best_move(board, player, depth):
         if score > best_score:
             best_score = score
             best_path = path
-
+    print()
     return best_path
 
 moves = m.legal_moves(1, BOARD)
