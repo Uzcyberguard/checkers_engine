@@ -33,7 +33,6 @@ class Minimax:
                             -player
                         )
                     )
-
                     alpha = max(alpha, value)
 
                     if alpha >= beta:
