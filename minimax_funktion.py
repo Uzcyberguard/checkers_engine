@@ -14,9 +14,9 @@ class Minimax:
             moves = m.legal_moves(player,board)
             if len(moves)==0 :
                 if player ==1:
-                   return -1000*depth
+                   return -1000+ply
                 else:
-                   return 1000*depth
+                   return 1000-ply
             if player == 1:  # MAX
 
                 value = -float("inf")
