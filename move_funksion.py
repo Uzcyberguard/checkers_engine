@@ -389,7 +389,7 @@ class Move:
                         moves.extend(self.find_moves(self.create_form(board,[(i,j)])))
 
 
-                if piece == -1 and (board[i][j] == -1 or board[i][j] == -3):
+                elif piece == -1 and (board[i][j] == -1 or board[i][j] == -3):
 
                     cap = self.find_captures(self.create_form(board, [(i,j)]))
                     if len(cap) > 1 or len(cap[0][1]) > 1:

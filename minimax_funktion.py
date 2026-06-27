@@ -6,15 +6,17 @@ class Minimax:
 
 
 
-        def minimax(self,board, depth, alpha, beta, player):
+        def minimax(self,board, depth, alpha, beta, player, ply):
 
             if depth == 0 :
                 return e.evaluate(board)
 
             moves = m.legal_moves(player,board)
-            if len(moves)==0:
-
-                return e.evaluate(board)
+            if len(moves)==0 :
+                if player ==1:
+                   return -1000*depth
+                else:
+                   return 1000*depth
             if player == 1:  # MAX
 
                 value = -float("inf")
@@ -30,7 +32,8 @@ class Minimax:
                             depth-1,
                             alpha,
                             beta,
-                            -player
+                            -player,
+                            ply+1
                         )
                     )
                     alpha = max(alpha, value)
@@ -55,7 +58,8 @@ class Minimax:
                             depth-1,
                             alpha,
                             beta,
-                            -player
+                            -player,
+                            ply+1
                         )
                     )
 
