@@ -25,7 +25,7 @@ class Evaluate:
                     mobility = 0
                     r = i ; c = j
                     a = board[i][j]
-                    point+=a*300
+                    point+=a*100
                     d1 = True
                     d2 = True
                     d3 = True
@@ -58,8 +58,11 @@ class Evaluate:
                                 d4 = False
                     if mobility == 0 and not m.is_there_captures([board,[(i,j)]]):
                         point -= 20*a
+
                     elif mobility == 1 and not m.is_there_captures([board,[(i,j)]]) :
                         point -= 10*a
+
+
         return point/100
 
 
