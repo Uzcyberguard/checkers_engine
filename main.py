@@ -7,7 +7,7 @@ from minimax_funktion import Minimax
 import time
 t = time.time()
 DEPTH = 12
-PLAYER = 1
+PLAYER = -1
 BOARD = [
     [ 0,-1, 0,-1, 0,-1, 0,-1],  # 0
     [-1, 0,-1, 0,-1, 0,-1, 0],  # 1
