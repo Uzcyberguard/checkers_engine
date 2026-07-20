@@ -19,18 +19,18 @@ board_cor = [
     for i in range(8)
 ]
 
-board_surface = pygame.image.load("C:/Users/local_acc/Desktop/checkers_boards/board4.png").convert_alpha()
+board_surface = pygame.image.load("checkers_boards/board4.png").convert_alpha()
 board_surface = pygame.transform.scale(board_surface, (750, 750))
 
 
 
-black_piece = pygame.image.load("C:/Users/local_acc/Desktop/checkers_boards/piece_red.png").convert_alpha()
+black_piece = pygame.image.load("checkers_boards/piece_red.png").convert_alpha()
 black_piece = pygame.transform.scale(black_piece,(70,70))
-white_piece = pygame.image.load("C:/Users/local_acc/Desktop/checkers_boards/piece_white.png").convert_alpha()
+white_piece = pygame.image.load("checkers_boards/piece_white.png").convert_alpha()
 white_piece = pygame.transform.scale(white_piece, (70, 70))
-black_king = pygame.image.load("C:/Users/local_acc/Desktop/checkers_boards/piece_red.png").convert_alpha()
+black_king = pygame.image.load("checkers_boards/piece_red.png").convert_alpha()
 black_king = pygame.transform.scale(black_king,(70,70))
-white_king = pygame.image.load("C:/Users/local_acc/Desktop/checkers_boards/piece_white.png").convert_alpha()
+white_king = pygame.image.load("checkers_boards/piece_white.png").convert_alpha()
 white_king= pygame.transform.scale(white_king, (70, 70))
 
 
