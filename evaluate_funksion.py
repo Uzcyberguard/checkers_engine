@@ -1,4 +1,4 @@
-from move_funksion import Move
+from generate_move import Move
 m = Move()
 
 class Evaluate:

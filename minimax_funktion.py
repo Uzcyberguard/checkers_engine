@@ -1,5 +1,5 @@
 from evaluate_funksion import Evaluate
-from move_funksion import Move
+from generate_move import Move
 e = Evaluate()
 m = Move()
 class Minimax:
