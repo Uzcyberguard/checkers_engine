@@ -3,9 +3,10 @@ from sys import exit
 from pieces import Piece
 from generate_move import Move
 class Game:
-     def __init__(self,name,board_surface,black_piece,white_piece,black_king,white_king):
+     def __init__(self,name,board_surface,black_piece,white_piece,black_king,white_king,board):
         self.pygame = pygame
         self.pygame.init()
+        self.board = board
         self.screen = pygame.display.set_mode((1200,800))
         self.pygame.display.set_caption(name)
         self.clock = pygame.time.Clock()
@@ -43,7 +44,7 @@ class Game:
             Piece(2, 1, "black"),
             Piece(2, 3, "black"),
             Piece(2, 5, "black"),
-            Piece(2, 7, "black"),
+            Piece(4, 5, "black"),
 
             # White pieces
             Piece(5, 0, "white"),
@@ -64,6 +65,47 @@ class Game:
         self.selected_piece = None
         self.mouse_pos = (-10,-10)
 
+
+     def highlight_moves(self):
+         i = self.selected_piece.row
+         j = self.selected_piece.col
+         highlight = []
+         caps = []
+         moves = []
+         if self.selected_piece.color == "white" and (self.board[i][j] == 1 or self.board[i][j] == 3):
+
+             cap = Move().find_captures(Move().create_form(self.board, [(i, j)]))
+             if len(cap) > 1 or len(cap[0][1]) > 1:
+                 caps.extend(cap)
+             else:
+                 moves.extend(Move().find_moves(Move().create_form(self.board, [(i, j)])))
+
+
+         elif self.selected_piece.color == "black" and (self.board[i][j] == -1 or self.board[i][j] == -3):
+
+             cap = Move().find_captures(Move().create_form(self.board, [(i, j)]))
+             if len(cap) > 1 or len(cap[0][1]) > 1:
+                 caps.extend(cap)
+             else:
+                 moves.extend(Move().find_moves(Move().create_form(self.board, [(i, j)])))
+
+         if caps:
+             for i in caps:
+                 for j in range(1,len(i[1])):
+                     highlight.append(i[1][j])
+
+
+         else:
+             for i in moves:
+                 for j in range(1, len(i[1])):
+
+                     highlight.append(i[1][j])
+
+         for h in highlight:
+             x,y=self.board_cor[h[0]][h[1]]
+             pygame.draw.circle(self.screen, (255,255, 0),(x+self.D//2-5, y + self.D//2-5) , 10)
+
+
      def draw(self):
          self.screen.blit(self.board_surface, (25, 25))
 
@@ -82,9 +124,10 @@ class Game:
                  pygame.draw.rect(
                      self.screen,
                      (255,255, 0),
-                     p.rect.inflate(6, 6),
+                     p.rect.inflate(7, 7),
                      width=3
                  )
+                 self.highlight_moves()
 
 
      def event_handler(self):

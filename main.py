@@ -6,9 +6,9 @@ pygame.init()
 board = [
     [ 0,-1, 0,-1, 0,-1, 0,-1],  # 0
     [-1, 0,-1, 0,-1, 0,-1, 0],  # 1
-    [ 0,-1, 0,-1, 0,-1, 0,-1],  # 2
+    [ 0,-1, 0,-1, 0,-1, 0, 0],  # 2
     [ 0, 0, 0, 0, 0, 0, 0, 0],  # 3
-    [ 0, 0, 0, 0, 0, 0, 0, 0],  # 4
+    [ 0, 0, 0, 0, 0,-1, 0, 0],  # 4
     [ 1, 0, 1, 0, 1, 0, 1, 0],  # 5
     [ 0, 1, 0, 1, 0, 1, 0, 1],  # 6
     [ 1, 0, 1, 0, 1, 0, 1, 0]   # 7
@@ -22,8 +22,8 @@ white_piece ="checkers_boards/piece_white.png"
 black_king = "checkers_boards/piece_red.png"
 white_king = "checkers_boards/piece_white.png"
 
-game = Game(name,board_surface,black_piece,white_piece,black_king,white_king)
+game = Game(name,board_surface,black_piece,white_piece,black_king,white_king,board)
 eng = Engine(8,1,board)
-print(eng.best_move())
+# print(eng.best_move())
 
 game.run()
