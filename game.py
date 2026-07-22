@@ -29,82 +29,61 @@ class Game:
 
 
 
-        self.pieces = [
-            # Black pieces
-            Piece(0, 1, "black"),
-            Piece(0, 3, "black"),
-            Piece(0, 5, "black"),
-            Piece(0, 7, "black"),
-
-            Piece(1, 0, "black"),
-            Piece(1, 2, "black"),
-            Piece(1, 4, "black"),
-            Piece(1, 6, "black"),
-
-            Piece(2, 1, "black"),
-            Piece(2, 3, "black"),
-            Piece(2, 5, "black"),
-            Piece(4, 5, "black"),
-
-            # White pieces
-            Piece(5, 0, "white"),
-            Piece(5, 2, "white"),
-            Piece(5, 4, "white"),
-            Piece(5, 6, "white"),
-
-            Piece(6, 1, "white"),
-            Piece(6, 3, "white"),
-            Piece(6, 5, "white"),
-            Piece(6, 7, "white"),
-
-            Piece(7, 0, "white"),
-            Piece(7, 2, "white"),
-            Piece(7, 4, "white"),
-            Piece(7, 6, "white"),
-        ]
+        self.pieces = []
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j]==1:
+                    self.pieces.append(Piece(i,j,1))
+                elif self.board[i][j]==-1:
+                    self.pieces.append(Piece(i, j, -1))
+                elif self.board[i][j] == 3:
+                    self.pieces.append(Piece(i,j,1,True))
+                elif self.board[i][j] == -3 :
+                    self.pieces.append(Piece(i,j,-1,True))
         self.selected_piece = None
         self.mouse_pos = (-10,-10)
 
 
      def highlight_moves(self):
-         i = self.selected_piece.row
-         j = self.selected_piece.col
-         highlight = []
-         caps = []
-         moves = []
-         if self.selected_piece.color == "white" and (self.board[i][j] == 1 or self.board[i][j] == 3):
+         row = self.selected_piece.row
+         col = self.selected_piece.col
+         for legal in Move().legal_moves(self.selected_piece.color,self.board):
 
-             cap = Move().find_captures(Move().create_form(self.board, [(i, j)]))
-             if len(cap) > 1 or len(cap[0][1]) > 1:
-                 caps.extend(cap)
-             else:
-                 moves.extend(Move().find_moves(Move().create_form(self.board, [(i, j)])))
+             if (row,col) == legal[1][0]:
+                 highlight = []
+                 caps = []
+                 moves = []
+                 if self.selected_piece.color == 1 and (self.board[row][col] == 1 or self.board[row][col] == 3):
 
-
-         elif self.selected_piece.color == "black" and (self.board[i][j] == -1 or self.board[i][j] == -3):
-
-             cap = Move().find_captures(Move().create_form(self.board, [(i, j)]))
-             if len(cap) > 1 or len(cap[0][1]) > 1:
-                 caps.extend(cap)
-             else:
-                 moves.extend(Move().find_moves(Move().create_form(self.board, [(i, j)])))
-
-         if caps:
-             for i in caps:
-                 for j in range(1,len(i[1])):
-                     highlight.append(i[1][j])
+                     cap = Move().find_captures(Move().create_form(self.board, [(row, col)]))
+                     if len(cap) > 1 or len(cap[0][1]) > 1:
+                         caps.extend(cap)
+                     else:
+                         moves.extend(Move().find_moves(Move().create_form(self.board, [(row, col)])))
 
 
-         else:
-             for i in moves:
-                 for j in range(1, len(i[1])):
+                 elif self.selected_piece.color == -1 and (self.board[row][col] == -1 or self.board[row][col] == -3):
 
-                     highlight.append(i[1][j])
+                     cap = Move().find_captures(Move().create_form(self.board, [(row, col)]))
+                     if len(cap) > 1 or len(cap[0][1]) > 1:
+                         caps.extend(cap)
+                     else:
+                         moves.extend(Move().find_moves(Move().create_form(self.board, [(row, col)])))
 
-         for h in highlight:
-             x,y=self.board_cor[h[0]][h[1]]
-             pygame.draw.circle(self.screen, (255,255, 0),(x+self.D//2-5, y + self.D//2-5) , 10)
+                 if caps:
+                     for i in caps:
+                            for j in range(1,len(i[1])):
 
+                                 x, y = self.board_cor[ i[1][j][0] ][ i[1][j][1] ]
+
+                                 pygame.draw.circle(self.screen, (255, 255, 0), (x + self.D // 2 - 5, y + self.D // 2 - 5), 10)
+
+
+                 else:
+                     for i in moves:
+                         for j in range(1, len(i[1])):
+                             x, y = self.board_cor[i[1][j][0]][i[1][j][1]]
+                             pygame.draw.circle(self.screen, (255, 255, 0), (x + self.D // 2 - 5, y + self.D // 2 - 5), 10)
 
      def draw(self):
          self.screen.blit(self.board_surface, (25, 25))
@@ -112,7 +91,7 @@ class Game:
          for p in self.pieces:
              x, y = self.board_cor[p.row][p.col]
 
-             if p.color == "white":
+             if p.color == 1:
                  img = self.white_king if p.king else self.white_piece
              else:
                  img = self.black_king if p.king else self.black_piece
