@@ -61,21 +61,49 @@ class Game:
             Piece(7, 4, "white"),
             Piece(7, 6, "white"),
         ]
+        self.selected_piece = None
+        self.mouse_pos = (-10,-10)
 
+     def draw(self):
+         self.screen.blit(self.board_surface, (25, 25))
+
+         for p in self.pieces:
+             x, y = self.board_cor[p.row][p.col]
+
+             if p.color == "white":
+                 img = self.white_king if p.king else self.white_piece
+             else:
+                 img = self.black_king if p.king else self.black_piece
+             p.rect = img.get_rect(topleft=(x, y))
+             self.screen.blit(img, p.rect)
+             if p.rect.collidepoint(self.mouse_pos):
+                 self.selected_piece = p
+             if p == self.selected_piece:
+                 pygame.draw.rect(
+                     self.screen,
+                     (50, 205, 50),
+                     p.rect.inflate(6, 6),
+                     width=6
+                 )
+
+
+     def event_handler(self):
+         for event in pygame.event.get():
+             if event.type == pygame.QUIT:
+                 pygame.quit()
+                 exit()
+             if event.type == pygame.MOUSEBUTTONDOWN:
+                 self.mouse_pos = pygame.mouse.get_pos()
+                 self.selected_piece = None
+                 for p in self.pieces:
+                     if p.rect.collidepoint(self.mouse_pos):
+                         self.selected_piece = p
+                         break
      def run(self):
         while True:
-           for event in pygame.event.get():
-               if event.type == pygame.QUIT:
-                   pygame.quit()
-                   exit()
-           self.screen.blit(self.board_surface,(25,25))
-           for piece in self.pieces:
-               x, y = self.board_cor[piece.row][piece.col]
-               if piece.color == "white":
-                   img = self.white_king if piece.king else self.white_piece
-               else:
-                   img = self.black_king if piece.king else self.black_piece
-               self.screen.blit(img,(x,y))
+
+           self.event_handler()
+           self.draw()
 
            pygame.display.update()
            self.clock.tick(60)

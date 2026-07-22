@@ -4,3 +4,4 @@ class Piece:
         self.col = col
         self.color= color
         self.king = king
+        self.rect = None
