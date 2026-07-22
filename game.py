@@ -9,8 +9,8 @@ class Game:
         self.screen = pygame.display.set_mode((1200,800))
         self.pygame.display.set_caption(name)
         self.clock = pygame.time.Clock()
-        self.X = 75 # x coordinate of first piece
-        self.Y = 78 # y coordinate of first piece
+        self.X = 72 # x coordinate of first piece
+        self.Y = 74 # y coordinate of first piece
         self.D = 83 # distance between two neighbour squares
         self.board_cor = [[ (round(self.X + j * self.D),round(self.Y + i * self.D))  for j in range(8) ]   for i in range(8) ]
         self.board_surface = pygame.image.load(board_surface).convert_alpha()

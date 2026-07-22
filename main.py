@@ -3,7 +3,7 @@ from game import Game
 pygame.init()
 
 name = "KingKong"
-board_surface = "checkers_boards/board4.png"
+board_surface = "checkers_boards/board_navy_gold.png"
 black_piece = "checkers_boards/piece_red.png"
 white_piece ="checkers_boards/piece_white.png"
 black_king = "checkers_boards/piece_red.png"
