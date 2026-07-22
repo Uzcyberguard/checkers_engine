@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
 from pieces import Piece
-
+from generate_move import Move
 class Game:
      def __init__(self,name,board_surface,black_piece,white_piece,black_king,white_king):
         self.pygame = pygame
@@ -81,9 +81,9 @@ class Game:
              if p == self.selected_piece:
                  pygame.draw.rect(
                      self.screen,
-                     (50, 205, 50),
+                     (255,255, 0),
                      p.rect.inflate(6, 6),
-                     width=6
+                     width=3
                  )
 
 

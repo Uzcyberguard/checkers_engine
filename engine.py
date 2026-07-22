@@ -15,17 +15,7 @@ class Engine:
         self.minimax = Minimax()
         self.depth = depth
         self.player = player
-        self.board = [
-            [ 0,-1, 0,-1, 0,-1, 0,-1],  # 0
-            [ 0, 0,-1, 0, 0, 0, 0, 0],  # 1
-            [ 0, 0, 0, 0, 0, 0, 0, 0],  # 2
-            [-3, 0, 0, 0, 0, 0, 0, 0],  # 3
-            [ 0, 0, 0, 1, 0, 1, 0, 0],  # 4
-            [ 3, 0, 0, 0, 0, 0, 1, 0],  # 5
-            [ 0, 1, 0, 0, 0, 0, 0, 1],  # 6
-            [ 0, 0, 1, 0, 1, 0, 1, 0]   # 7
-            # 0  1  2  3  4  5  6  7
-        ]
+        self.board = board
 
 
 
@@ -57,15 +47,15 @@ class Engine:
                 -self.player,
                 1
             )
-            if abs(score) > 950:
-                mate_ply = 1000-abs(score)
-                mate_moves = (mate_ply+1)//2
-                if score>0:
-                    print(path,f"+M{mate_moves}")
-                else:
-                    print(path,f"-M{mate_moves}")
-            else:
-                print(path,score)
+            # if abs(score) > 950:
+            #     mate_ply = 1000-abs(score)
+            #     mate_moves = (mate_ply+1)//2
+            #     if score>0:
+            #         print(path,f"+M{mate_moves}")
+            #     else:
+            #         print(path,f"-M{mate_moves}")
+            # else:
+            #     print(path,score)
             if self.player == 1:
                 if score > best_score:
                     best_score = score
