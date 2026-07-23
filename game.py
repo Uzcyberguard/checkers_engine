@@ -33,9 +33,9 @@ class Game:
         for i in range(8):
             for j in range(8):
                 if self.board[i][j]==1:
-                    self.pieces.append(Piece(i,j,1))
+                    self.pieces.append(Piece(i,j,1,False))
                 elif self.board[i][j]==-1:
-                    self.pieces.append(Piece(i, j, -1))
+                    self.pieces.append(Piece(i, j, -1,False))
                 elif self.board[i][j] == 3:
                     self.pieces.append(Piece(i,j,1,True))
                 elif self.board[i][j] == -3 :
