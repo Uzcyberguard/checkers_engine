@@ -50,7 +50,7 @@ class Game:
          for legal in Move().legal_moves(self.selected_piece.color,self.board):
 
              if (row,col) == legal[1][0]:
-                 highlight = []
+
                  caps = []
                  moves = []
                  if self.selected_piece.color == 1 and (self.board[row][col] == 1 or self.board[row][col] == 3):
@@ -62,13 +62,13 @@ class Game:
                          moves.extend(Move().find_moves(Move().create_form(self.board, [(row, col)])))
 
 
-                 elif self.selected_piece.color == -1 and (self.board[row][col] == -1 or self.board[row][col] == -3):
-
-                     cap = Move().find_captures(Move().create_form(self.board, [(row, col)]))
-                     if len(cap) > 1 or len(cap[0][1]) > 1:
-                         caps.extend(cap)
-                     else:
-                         moves.extend(Move().find_moves(Move().create_form(self.board, [(row, col)])))
+                 # elif self.selected_piece.color == -1 and (self.board[row][col] == -1 or self.board[row][col] == -3):
+                 #
+                 #     cap = Move().find_captures(Move().create_form(self.board, [(row, col)]))
+                 #     if len(cap) > 1 or len(cap[0][1]) > 1:
+                 #         caps.extend(cap)
+                 #     else:
+                 #         moves.extend(Move().find_moves(Move().create_form(self.board, [(row, col)])))
 
                  if caps:
                      for i in caps:
@@ -97,8 +97,8 @@ class Game:
                  img = self.black_king if p.king else self.black_piece
              p.rect = img.get_rect(topleft=(x, y))
              self.screen.blit(img, p.rect)
-             if p.rect.collidepoint(self.mouse_pos):
-                 self.selected_piece = p
+             # if p.rect.collidepoint(self.mouse_pos):
+             #     self.selected_piece = p
              if p == self.selected_piece:
                  pygame.draw.rect(
                      self.screen,
@@ -118,8 +118,9 @@ class Game:
                  self.mouse_pos = pygame.mouse.get_pos()
                  self.selected_piece = None
                  for p in self.pieces:
-                     if p.rect.collidepoint(self.mouse_pos):
+                     if p.rect.collidepoint(self.mouse_pos) and p.color == 1:
                          self.selected_piece = p
+                         print(self.selected_piece.color)
                          break
      def run(self):
         while True:
