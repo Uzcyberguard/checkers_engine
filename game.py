@@ -41,6 +41,7 @@ class Game:
                 elif self.board[i][j] == -3 :
                     self.pieces.append(Piece(i,j,-1,True))
         self.selected_piece = None
+        self.move_to = None
         self.mouse_pos = (-10,-10)
 
 
@@ -97,8 +98,7 @@ class Game:
                  img = self.black_king if p.king else self.black_piece
              p.rect = img.get_rect(topleft=(x, y))
              self.screen.blit(img, p.rect)
-             # if p.rect.collidepoint(self.mouse_pos):
-             #     self.selected_piece = p
+
              if p == self.selected_piece:
                  pygame.draw.rect(
                      self.screen,
@@ -107,7 +107,10 @@ class Game:
                      width=3
                  )
                  self.highlight_moves()
-
+             if self.move_to is not None:
+                 p.row = self.move_to[0]
+                 p.col = self.move_to[1]
+                 self.move_to = None
 
      def event_handler(self):
          for event in pygame.event.get():
@@ -116,6 +119,11 @@ class Game:
                  exit()
              if event.type == pygame.MOUSEBUTTONDOWN:
                  self.mouse_pos = pygame.mouse.get_pos()
+                 self.move_to = None
+                 for i in range(8):
+                     for j in range(8):
+                         if (5< self.board_cor[i][j][0]-self.mouse_pos[0]<70) and (5< self.board_cor[i][j][1]-self.mouse_pos[1]<70):
+                             self.move_to = (i,j)
                  self.selected_piece = None
                  for p in self.pieces:
                      if p.rect.collidepoint(self.mouse_pos) and p.color == 1:
