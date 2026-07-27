@@ -43,7 +43,7 @@ class Game:
         self.selected_piece = None
         self.move_to = None
         self.mouse_pos = (-10,-10)
-
+        self.possible_moves = []
 
      def highlight_moves(self):
          row = self.selected_piece.row
@@ -76,7 +76,7 @@ class Game:
                             for j in range(1,len(i[1])):
 
                                  x, y = self.board_cor[ i[1][j][0] ][ i[1][j][1] ]
-
+                                 self.possible_moves.append((i[1][j][0],i[1][j][1]))
                                  pygame.draw.circle(self.screen, (255, 255, 0), (x + self.D // 2 - 5, y + self.D // 2 - 5), 10)
 
 
@@ -84,6 +84,7 @@ class Game:
                      for i in moves:
                          for j in range(1, len(i[1])):
                              x, y = self.board_cor[i[1][j][0]][i[1][j][1]]
+                             self.possible_moves.append((i[1][j][0], i[1][j][1]))
                              pygame.draw.circle(self.screen, (255, 255, 0), (x + self.D // 2 - 5, y + self.D // 2 - 5), 10)
 
      def draw(self):
@@ -106,10 +107,11 @@ class Game:
                      p.rect.inflate(7, 7),
                      width=3
                  )
+                 self.possible_moves = []
                  self.highlight_moves()
-             if self.move_to is not None:
-                 p.row = self.move_to[0]
-                 p.col = self.move_to[1]
+             if self.move_to is not None and self.selected_piece is not None:
+                 self.selected_piece.row = self.move_to[0]
+                 self.selected_piece.col = self.move_to[1]
                  self.move_to = None
 
      def event_handler(self):
@@ -119,17 +121,22 @@ class Game:
                  exit()
              if event.type == pygame.MOUSEBUTTONDOWN:
                  self.mouse_pos = pygame.mouse.get_pos()
-                 self.move_to = None
-                 for i in range(8):
-                     for j in range(8):
-                         if (5< self.board_cor[i][j][0]-self.mouse_pos[0]<70) and (5< self.board_cor[i][j][1]-self.mouse_pos[1]<70):
-                             self.move_to = (i,j)
-                 self.selected_piece = None
                  for p in self.pieces:
                      if p.rect.collidepoint(self.mouse_pos) and p.color == 1:
                          self.selected_piece = p
+                         self.move_to = None
                          print(self.selected_piece.color)
                          break
+
+                 if self.selected_piece is not None:
+                     for i in range(8):
+                         for j in range(8):
+                             if (5<self.mouse_pos[0]- self.board_cor[i][j][0]<70) and (5< self.mouse_pos[1]-self.board_cor[i][j][1]<70):
+                                 if (i,j) in self.possible_moves:
+                                   self.move_to = (i,j)
+                                 print(self.move_to)
+
+
      def run(self):
         while True:
 
