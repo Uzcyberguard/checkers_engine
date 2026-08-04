@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from pieces import Piece
 from generate_move import Move
+from engine import Engine
 class Game:
      def __init__(self,name,board_surface,black_piece,white_piece,black_king,white_king,board):
         self.pygame = pygame
@@ -28,7 +29,7 @@ class Game:
         self.white_king= pygame.transform.scale(self.white_king, (70, 70))
 
 
-
+        self.turn = False
         self.pieces = []
         for i in range(8):
             for j in range(8):
@@ -88,20 +89,33 @@ class Game:
              p.rect = img.get_rect(topleft=(x, y))
              self.screen.blit(img, p.rect)
 
-     def lala(self):
-                 p = self.selected_piece
+             if p == self.selected_piece:
                  pygame.draw.rect(
                      self.screen,
-                     (255,255, 0),
+                     (255, 255, 0),
                      p.rect.inflate(7, 7),
                      width=3
                  )
+
+     def do_move(self):
+
                  self.possible_moves = []
                  self.highlight_moves()
                  if self.move_to is not None and self.selected_piece is not None:
+                     for i in self.pieces:
+                         if (i.row-self.selected_piece.row == i.col - self.selected_piece.col) and (min(self.selected_piece.row,self.move_to[0])<i.row<max(self.selected_piece.row,self.move_to[0])):
+                             self.board[i.row][i.col] = 0
+                             self.board[self.selected_piece.row][self.selected_piece.col] = 0
+                             self.board[self.move_to[0]][self.move_to[1]] = self.board[self.selected_piece.row][self.selected_piece.col]
+                             self.board[self.selected_piece.row][self.selected_piece.col] = 0
+                             del i
+
                      self.selected_piece.row = self.move_to[0]
                      self.selected_piece.col = self.move_to[1]
+
                      self.move_to = None
+     def do_ai_move(self):
+         pass
 
      def event_handler(self):
          for event in pygame.event.get():
@@ -129,6 +143,11 @@ class Game:
 
            self.event_handler()
            self.draw()
+           if self.selected_piece is not None:
+                self.highlight_moves()
+                self.do_move()
+           if self.turn :
+               do_ai_move()
 
            pygame.display.update()
            self.clock.tick(60)
