@@ -29,7 +29,8 @@ class Game:
         self.white_king= pygame.transform.scale(self.white_king, (70, 70))
 
 
-        self.turn = False
+        self.turn = True
+        self.need_to_move = True
         self.pieces = []
         for i in range(8):
             for j in range(8):
@@ -102,13 +103,15 @@ class Game:
                  self.possible_moves = []
                  self.highlight_moves()
                  if self.move_to is not None and self.selected_piece is not None:
+                     j = 0
                      for i in self.pieces:
                          if (i.row-self.selected_piece.row == i.col - self.selected_piece.col) and (min(self.selected_piece.row,self.move_to[0])<i.row<max(self.selected_piece.row,self.move_to[0])):
                              self.board[i.row][i.col] = 0
                              self.board[self.selected_piece.row][self.selected_piece.col] = 0
                              self.board[self.move_to[0]][self.move_to[1]] = self.board[self.selected_piece.row][self.selected_piece.col]
                              self.board[self.selected_piece.row][self.selected_piece.col] = 0
-                             del i
+                             self.pieces.pop(j)
+                         j+=1
 
                      self.selected_piece.row = self.move_to[0]
                      self.selected_piece.col = self.move_to[1]
@@ -122,32 +125,42 @@ class Game:
              if event.type == pygame.QUIT:
                  pygame.quit()
                  exit()
-             if event.type == pygame.MOUSEBUTTONDOWN:
+             if event.type == pygame.MOUSEBUTTONDOWN and self.need_to_move:
+
                  self.mouse_pos = pygame.mouse.get_pos()
                  for p in self.pieces:
                      if p.rect.collidepoint(self.mouse_pos) and p.color == 1:
                          self.selected_piece = p
+                         self.need_to_move = False
                          self.move_to = None
                          break
-
-                 if self.selected_piece is not None:
-                     for i in range(8):
-                         for j in range(8):
-                             if (5<self.mouse_pos[0]- self.board_cor[i][j][0]<70) and (5< self.mouse_pos[1]-self.board_cor[i][j][1]<70):
-                                 if (i,j) in self.possible_moves:
-                                   self.move_to = (i,j)
-
+     def select_where_to_move(self):
+         for event in pygame.event.get():
+             if event.type == pygame.MOUSEBUTTONDOWN:
+                 print(2)
+                 for i in range(8):
+                     for j in range(8):
+                         if (5<self.mouse_pos[0]- self.board_cor[i][j][0]<70) and (5< self.mouse_pos[1]-self.board_cor[i][j][1]<70):
+                             if (i,j) in self.possible_moves:
+                                 self.move_to = (i,j)
+                 if not self.move_to:
+                     self.selected_piece = None
 
      def run(self):
+
         while True:
 
            self.event_handler()
            self.draw()
+
            if self.selected_piece is not None:
-                self.highlight_moves()
-                self.do_move()
-           if self.turn :
-               do_ai_move()
+               self.highlight_moves()
+               self.select_where_to_move()
+               self.do_move()
+           if not self.turn :
+               self.do_ai_move()
+
+
 
            pygame.display.update()
            self.clock.tick(60)
